@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="JsonConsoleFormatters" Version="0.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DVTElevatorChallengeTest.Core\DVTElevatorChallengeTest.Core.csproj" />
+    <ProjectReference Include="..\DVTElevatorChallengeTest.Infrastructure\DVTElevatorChallengeTest.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
