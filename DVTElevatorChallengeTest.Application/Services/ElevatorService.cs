@@ -16,7 +16,6 @@ namespace DVTElevatorChallengeTest.Application.Services
         /// <summary>
         /// Initializes a new instance of the ElevatorService class.
         /// </summary>
-        /// <param name="building">The building containing the elevators.</param>
         /// <param name="dispatcher">The dispatcher responsible for managing elevator requests.</param>
         /// <param name="logger">The logger instance for logging information.</param>
         /// <param name="elevatorRepository">The repository for managing elevator data.</param>
@@ -64,6 +63,35 @@ namespace DVTElevatorChallengeTest.Application.Services
             {
                 _logger.LogError(ex, "An error occurred while calling the elevator.");
             }
+        }
+
+        /// <summary>
+        /// Moves the elevator to the user's floor and then to the destination floor.
+        /// </summary>
+        /// <param name="userFloor">The floor where the user is located.</param>
+        /// <param name="destinationFloor">The floor where the user wants to go.</param>
+        /// <param name="passengers">The number of passengers.</param>
+        public async Task MoveElevatorToUserAndDestinationAsync(int userFloor, int destinationFloor, int passengers)
+        {
+            try
+            {
+                await _elevatorRepository.MoveElevatorToUserAndDestinationAsync(userFloor, destinationFloor);
+                _logger.LogInformation("Elevator moved from floor {UserFloor} to floor {DestinationFloor} with {Passengers} passengers.", userFloor, destinationFloor, passengers);
+                DisplayArrivalMessage(destinationFloor);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while moving the elevator.");
+            }
+        }
+
+        /// <summary>
+        /// Displays a message when the elevator reaches the destination floor.
+        /// </summary>
+        /// <param name="floor">The destination floor.</param>
+        private static void DisplayArrivalMessage(int floor)
+        {
+            Console.WriteLine($"The elevator has arrived at floor {floor}. Please exit the elevator.");
         }
 
         /// <summary>
