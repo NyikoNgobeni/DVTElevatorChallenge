@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVTElevatorChallengeTest.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVTElevatorChallengeTest.Infrastructure", "..\DVTElevatorChallengeTest.Infrastructure\DVTElevatorChallengeTest.Infrastructure.csproj", "{256C6A62-073D-4D6B-8F87-D62B0CC3A65B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVTElevatorChallengeTest.UnitTest", "..\DVTElevatorChallengeTest.UnitTest\DVTElevatorChallengeTest.UnitTest.csproj", "{A829BEF9-6960-4021-82A9-5B0A821AEFD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVTElevatorChallengeTest.UnitTests", "..\DVTElevatorChallengeTest.UnitTests\DVTElevatorChallengeTest.UnitTests.csproj", "{838B5B41-48F0-4F29-99C3-4B972FFF5C16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{256C6A62-073D-4D6B-8F87-D62B0CC3A65B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{256C6A62-073D-4D6B-8F87-D62B0CC3A65B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{256C6A62-073D-4D6B-8F87-D62B0CC3A65B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A829BEF9-6960-4021-82A9-5B0A821AEFD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A829BEF9-6960-4021-82A9-5B0A821AEFD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A829BEF9-6960-4021-82A9-5B0A821AEFD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A829BEF9-6960-4021-82A9-5B0A821AEFD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{838B5B41-48F0-4F29-99C3-4B972FFF5C16}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{838B5B41-48F0-4F29-99C3-4B972FFF5C16}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{838B5B41-48F0-4F29-99C3-4B972FFF5C16}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{838B5B41-48F0-4F29-99C3-4B972FFF5C16}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

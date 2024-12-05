@@ -44,19 +44,16 @@ namespace DVTElevatorChallengeTest.ConsoleApp
             Console.WriteLine("Thank you for using the DVT Elevator Simulation!");
         }
 
+        /// <summary>
+        /// Handles the elevator call process.
+        /// </summary>
+        /// <param name="service">The elevator service instance.</param>
         private static async Task HandleElevatorCallAsync(ElevatorService service)
         {
             try
             {
-                Console.Write("Enter your current floor number: ");
-                if (!int.TryParse(Console.ReadLine(), out var userFloor) || userFloor < 1 || userFloor > 10)
-                {
-                    await DisplayErrorMessageAsync("Invalid floor number. Please enter a number between 1 and 10.");
-                    return;
-                }
-
-                Console.Write("Enter your destination floor number: ");
-                if (!int.TryParse(Console.ReadLine(), out var destinationFloor) || destinationFloor < 1 || destinationFloor > 10)
+                Console.Write("Enter floor number: ");
+                if (!int.TryParse(Console.ReadLine(), out var floor) || floor < 1 || floor > 10)
                 {
                     await DisplayErrorMessageAsync("Invalid floor number. Please enter a number between 1 and 10.");
                     return;
@@ -69,7 +66,7 @@ namespace DVTElevatorChallengeTest.ConsoleApp
                     return;
                 }
 
-                await service.MoveElevatorToUserAndDestinationAsync(userFloor, destinationFloor, passengers);
+                await service.CallElevatorAsync(floor, passengers);
                 await Task.Delay(4000); // Simulate real-time processing
             }
             catch (Exception ex)
@@ -78,6 +75,10 @@ namespace DVTElevatorChallengeTest.ConsoleApp
             }
         }
 
+        /// <summary>
+        /// Displays an error message and pauses for a specified duration.
+        /// </summary>
+        /// <param name="message">The error message to display.</param>
         private static async Task DisplayErrorMessageAsync(string message)
         {
             Console.WriteLine(message);
