@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVTElevatorChallengeTest.In
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DVTElevatorChallengeTest.UnitTests", "..\DVTElevatorChallengeTest.UnitTests\DVTElevatorChallengeTest.UnitTests.csproj", "{838B5B41-48F0-4F29-99C3-4B972FFF5C16}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{53D1CF5D-9FEE-465E-8D15-6C99CD8F15B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{174D3FB2-6EB6-411E-82AE-EDC00F10FD15}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +46,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DC27AD6D-F0F6-4961-AE34-E1434971B6AF} = {53D1CF5D-9FEE-465E-8D15-6C99CD8F15B5}
+		{FD7522A2-79A8-464B-82B8-82B8F540FA86} = {53D1CF5D-9FEE-465E-8D15-6C99CD8F15B5}
+		{90E7B01D-1DAA-477C-A149-8AFF44E75452} = {53D1CF5D-9FEE-465E-8D15-6C99CD8F15B5}
+		{256C6A62-073D-4D6B-8F87-D62B0CC3A65B} = {53D1CF5D-9FEE-465E-8D15-6C99CD8F15B5}
+		{838B5B41-48F0-4F29-99C3-4B972FFF5C16} = {174D3FB2-6EB6-411E-82AE-EDC00F10FD15}
 	EndGlobalSection
 EndGlobal
