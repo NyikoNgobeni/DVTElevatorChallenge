@@ -53,11 +53,9 @@ namespace DVTElevatorChallengeTest.Infrastructure.Repositories
             }
         }
 
-        public async Task MoveElevatorToUserAndDestinationAsync(int userFloor, int destinationFloor)
+        public async Task MoveElevatorToUserDestinationAsync(int destinationFloor)
         {
-            // Move elevator to user's floor
-            await MoveToFloorAsync(userFloor);
-
+           
             await AddPassengersAsync(DefaultPassengerCount);
 
             // Move elevator to destination floor

@@ -15,7 +15,7 @@ namespace DVTElevatorChallengeTest.ConsoleApp
             var elevator = new Elevator(1); // Create an instance of Elevator
             var elevatorRepository = new ElevatorRepository(elevator); // Pass the instance to the constructor
             var dispatcher = new ElevatorDispatcher(elevatorRepository);
-            var service = new ElevatorService(dispatcher, logger, elevatorRepository);
+            var service = new ElevatorService((Logger<ElevatorService>)logger, elevatorRepository);
 
             Console.WriteLine("Welcome to the DVT Elevator Simulation!");
 
@@ -52,21 +52,22 @@ namespace DVTElevatorChallengeTest.ConsoleApp
         {
             try
             {
-                Console.Write("Enter floor number: ");
-                if (!int.TryParse(Console.ReadLine(), out var floor) || floor < 1 || floor > 10)
+                Console.Write("Enter destination floor number: ");
+                if (!int.TryParse(Console.ReadLine(), out var destinationFloor) || destinationFloor < 1 || destinationFloor > 10)
                 {
-                    await DisplayErrorMessageAsync("Invalid floor number. Please enter a number between 1 and 10.");
+                    await DisplayErrorMessageAsync("Invalid destination floor number. Please enter a number between 1 and 10.");
                     return;
                 }
 
                 Console.Write("Enter number of passengers: ");
-                if (!int.TryParse(Console.ReadLine(), out var passengers) || passengers < 1)
+                if (!int.TryParse(Console.ReadLine(), out var passengers) || passengers < 1 || passengers > 15)
                 {
-                    await DisplayErrorMessageAsync("Invalid number of passengers. Please enter a positive number.");
+                    await DisplayErrorMessageAsync("Elevator have exceeded the maximum carrying capacity. Please enter a number between 1 and 15.");
                     return;
                 }
 
-                await service.CallElevatorAsync(floor, passengers);
+
+                await service.MoveElevatorToUserDestinationAsync(destinationFloor, passengers);
                 await Task.Delay(4000); // Simulate real-time processing
             }
             catch (Exception ex)

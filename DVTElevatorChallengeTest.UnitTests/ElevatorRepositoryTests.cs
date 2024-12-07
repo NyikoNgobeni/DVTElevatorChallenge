@@ -64,14 +64,13 @@ namespace DVTElevatorChallengeTest.UnitTests
         }
 
         [Test]
-        public async Task MoveElevatorToUserAndDestinationAsync_ShouldMoveToUserAndDestinationFloor()
+        public async Task MoveElevatorToUserDestinationAsync_ShouldMoveToUserAndDestinationFloor()
         {
             // Arrange
-            int userFloor = 3;
             int destinationFloor = 7;
 
             // Act
-            await _elevatorRepository.MoveElevatorToUserAndDestinationAsync(userFloor, destinationFloor);
+            await _elevatorRepository.MoveElevatorToUserDestinationAsync(destinationFloor);
 
             // Assert
             var elevator = (Elevator)typeof(ElevatorRepository)

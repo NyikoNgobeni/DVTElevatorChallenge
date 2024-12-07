@@ -9,7 +9,6 @@ namespace DVTElevatorChallengeTest.Application.Services
     /// </summary>
     public class ElevatorService : IElevatorService
     {
-        private readonly IElevatorDispatcher _dispatcher;
         private readonly ILogger<ElevatorService> _logger;
         private readonly IElevatorRepository _elevatorRepository;
 
@@ -19,65 +18,29 @@ namespace DVTElevatorChallengeTest.Application.Services
         /// <param name="dispatcher">The dispatcher responsible for managing elevator requests.</param>
         /// <param name="logger">The logger instance for logging information.</param>
         /// <param name="elevatorRepository">The repository for managing elevator data.</param>
-        public ElevatorService(IElevatorDispatcher dispatcher, ILogger<ElevatorService> logger, IElevatorRepository elevatorRepository)
+        public ElevatorService(Logger<ElevatorService> logger, IElevatorRepository elevatorRepository)
         {
-            _dispatcher = dispatcher;
             _logger = logger;
             _elevatorRepository = elevatorRepository;
         }
 
-        /// <summary>
-        /// Calls an elevator to the specified floor with the given number of passengers.
-        /// </summary>
-        /// <param name="floor">The floor where the elevator is requested.</param>
-        /// <param name="passengers">The number of passengers waiting for the elevator.</param>
-        public async Task CallElevatorAsync(int floor, int passengers)
-        {
-            try
-            {
-                if (floor > 10)
-                {
-                    _logger.LogError("Floor {Floor} is greater than 10. Cannot call elevator to this floor.", floor);
-                    return;
-                }
-
-                var elevator = await _dispatcher.DispatchAsync(floor, passengers);
-                if (elevator != null)
-                {
-                    await _elevatorRepository.MoveToFloorAsync(floor);
-                    if (await _elevatorRepository.AddPassengersAsync(passengers))
-                    {
-                        _logger.LogInformation("Elevator {ElevatorId} is moving to floor {Floor}.", elevator.Id, floor);
-                    }
-                    else
-                    {
-                        _logger.LogWarning("Elevator is full. Waiting for the next one.");
-                    }
-                }
-                else
-                {
-                    _logger.LogWarning("No available elevators at the moment. Please wait.");
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "An error occurred while calling the elevator.");
-            }
-        }
 
         /// <summary>
         /// Moves the elevator to the user's floor and then to the destination floor.
         /// </summary>
-        /// <param name="userFloor">The floor where the user is located.</param>
         /// <param name="destinationFloor">The floor where the user wants to go.</param>
         /// <param name="passengers">The number of passengers.</param>
-        public async Task MoveElevatorToUserAndDestinationAsync(int userFloor, int destinationFloor, int passengers)
+        public async Task MoveElevatorToUserDestinationAsync(int destinationFloor, int passengers)
         {
             try
             {
-                await _elevatorRepository.MoveElevatorToUserAndDestinationAsync(userFloor, destinationFloor);
-                _logger.LogInformation("Elevator moved from floor {UserFloor} to floor {DestinationFloor} with {Passengers} passengers.", userFloor, destinationFloor, passengers);
+                await _elevatorRepository.MoveElevatorToUserDestinationAsync(destinationFloor);
+
+                _logger.LogInformation("Elevator is moving to floor {DestinationFloor} with {Passengers} passengers.", destinationFloor, passengers);
+
                 DisplayArrivalMessage(destinationFloor);
+
+                await Task.Delay(2000);
             }
             catch (Exception ex)
             {
@@ -91,7 +54,7 @@ namespace DVTElevatorChallengeTest.Application.Services
         /// <param name="floor">The destination floor.</param>
         private static void DisplayArrivalMessage(int floor)
         {
-            Console.WriteLine($"The elevator has arrived at floor {floor}. Please exit the elevator.");
+            Console.WriteLine($"You have arrived at your destination floor {floor}. Please exit the elevator.");
         }
 
         /// <summary>
