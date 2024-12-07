@@ -12,7 +12,7 @@ namespace DVTElevatorChallengeTest.UnitTests
 
         public ElevatorRepositoryTests()
         {
-            var elevator = new Elevator(1) { PassengerCount = 0, CurrentFloor = 1 };
+            var elevator = new Elevator() { PassengerCount = 0, CurrentFloor = 1 };
             _mockElevatorRepository = new Mock<IElevatorRepository>();
             _elevatorRepository = new ElevatorRepository(elevator);
         }

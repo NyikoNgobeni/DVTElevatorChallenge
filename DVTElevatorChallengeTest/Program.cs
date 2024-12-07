@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
-using DVTElevatorChallengeTest.Application.Services;
-using DVTElevatorChallengeTest.Core.Models;
+﻿using DVTElevatorChallengeTest.Application.Services;
+using DVTElevatorChallengeTest.ConsoleApp.Validations;
 using DVTElevatorChallengeTest.Infrastructure.Repositories;
+using FluentValidation;
+
 using Microsoft.Extensions.Logging;
 
 namespace DVTElevatorChallengeTest.ConsoleApp
@@ -12,16 +13,13 @@ namespace DVTElevatorChallengeTest.ConsoleApp
         {
             var loggerFactory = LoggerFactory.Create(static builder => builder.AddConsole());
             var logger = loggerFactory.CreateLogger<ElevatorService>();
-            var elevator = new Elevator(1); // Create an instance of Elevator
+            var elevator = new Elevator(); // Create an instance of Elevator
             var elevatorRepository = new ElevatorRepository(elevator); // Pass the instance to the constructor
-            var dispatcher = new ElevatorDispatcher(elevatorRepository);
             var service = new ElevatorService((Logger<ElevatorService>)logger, elevatorRepository);
-
-            Console.WriteLine("Welcome to the DVT Elevator Simulation!");
-
             while (true)
             {
                 Console.Clear();
+                Console.WriteLine("Welcome to the DVT Elevator Simulation!");
                 Console.WriteLine("=== Elevator Status ===");
                 await service.DisplayStatusAsync();
                 Console.WriteLine("\nOptions:");
@@ -50,29 +48,68 @@ namespace DVTElevatorChallengeTest.ConsoleApp
         /// <param name="service">The elevator service instance.</param>
         private static async Task HandleElevatorCallAsync(ElevatorService service)
         {
-            try
+            var validator = new ElevatorCallValidator();
+            // Collect and validate destination floor number
+            string destinationFloorInput = await CollectAndValidateInputAsync(
+                "Enter destination floor number: ",
+                validator,
+                nameof(ElevatorCall.DestinationFloor)
+            );
+
+            // Collect and validate number of passengers
+            string passengersInput = await CollectAndValidateInputAsync(
+                "Enter number of passengers: ",
+                validator,
+                nameof(ElevatorCall.Passengers)
+            );
+
+            // Proceed with validated inputs
+            var destinationFloor = int.Parse(destinationFloorInput);
+            var passengers = int.Parse(passengersInput);
+
+            await SimulateElevatorProcessAsync("Elevator is on its way!", 2000);
+            await SimulateElevatorProcessAsync("Doors Opening, You may Enter!", 2000);
+            await SimulateElevatorProcessAsync("Doors Closing, Stay Safe!", 2000);
+            await Task.Delay(2000); // Simulate elevator delay
+            await service.MoveElevatorToUserDestinationAsync(destinationFloor, passengers);
+            await Task.Delay(4000); // Simulate real-time processing
+        }
+        
+        /// <summary>
+        /// Collects and validates user input based on the specified property.
+        /// </summary>
+        /// <param name="prompt">The prompt message to display to the user.</param>
+        /// <param name="validator">The validator instance for validating input.</param>
+        /// <param name="propertyName">The property name to validate.</param>
+        /// <returns>The validated user input.</returns>
+        private static async Task<string> CollectAndValidateInputAsync(string prompt, IValidator<ElevatorCall> validator, string propertyName)
+        {
+            while (true)
             {
-                Console.Write("Enter destination floor number: ");
-                if (!int.TryParse(Console.ReadLine(), out var destinationFloor) || destinationFloor < 1 || destinationFloor > 10)
+                Console.Write(prompt);
+                var input = Console.ReadLine();
+
+                var elevatorCall = new ElevatorCall();
+                if (propertyName == nameof(ElevatorCall.DestinationFloor))
                 {
-                    await DisplayErrorMessageAsync("Invalid destination floor number. Please enter a number between 1 and 10.");
-                    return;
+                    elevatorCall.DestinationFloor = input;
+                }
+                else if (propertyName == nameof(ElevatorCall.Passengers))
+                {
+                    elevatorCall.Passengers = input;
                 }
 
-                Console.Write("Enter number of passengers: ");
-                if (!int.TryParse(Console.ReadLine(), out var passengers) || passengers < 1 || passengers > 15)
+                var validationResult = await Task.Run(() => validator.Validate(elevatorCall, options => options.IncludeProperties(propertyName)));
+
+                if (validationResult.IsValid)
                 {
-                    await DisplayErrorMessageAsync("Elevator have exceeded the maximum carrying capacity. Please enter a number between 1 and 15.");
-                    return;
+                    return input;
                 }
 
-
-                await service.MoveElevatorToUserDestinationAsync(destinationFloor, passengers);
-                await Task.Delay(4000); // Simulate real-time processing
-            }
-            catch (Exception ex)
-            {
-                await DisplayErrorMessageAsync($"An error occurred: {ex.Message}");
+                foreach (var error in validationResult.Errors)
+                {
+                    Console.WriteLine(error.ErrorMessage);
+                }
             }
         }
 
@@ -84,6 +121,11 @@ namespace DVTElevatorChallengeTest.ConsoleApp
         {
             Console.WriteLine(message);
             await Task.Delay(4000); // Pause to allow the user to read the message
+        }
+        private static async Task SimulateElevatorProcessAsync(string message, int delay)
+        {
+            Console.WriteLine(message);
+            await Task.Delay(delay);
         }
     }
 }

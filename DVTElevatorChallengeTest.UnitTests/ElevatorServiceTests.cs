@@ -42,8 +42,8 @@ namespace DVTElevatorChallengeTest.UnitTests
             // Arrange
             var elevators = new List<Elevator>
             {
-                new(1) { CurrentFloor = 1, Direction = ElevatorDirection.Up, PassengerCount = 2 },
-                new(2) { CurrentFloor = 3, Direction = ElevatorDirection.Down, PassengerCount = 1 }
+                new() { CurrentFloor = 1, Direction = ElevatorDirection.Up, PassengerCount = 2 },
+                new() { CurrentFloor = 3, Direction = ElevatorDirection.Down, PassengerCount = 1 }
             };
             _mockRepository.Setup(r => r.GetElevatorsAsync(5)).ReturnsAsync(elevators);
 

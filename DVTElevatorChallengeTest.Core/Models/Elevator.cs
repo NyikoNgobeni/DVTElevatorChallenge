@@ -1,14 +1,21 @@
 ﻿using DVTElevatorChallengeTest.Core.Models;
 
-public class Elevator(int id)
+
+public class Elevator
 {
-    public int Id { get; } = id;
+    private static int _nextId = 1;
+    public int ElevatorId { get; }
     public int CurrentFloor { get; set; } = 0;
     public ElevatorDirection Direction { get; set; } = GetRandomDirection();
     public ElevatorState State { get; set; } = GetRandomState();
     public bool IsMoving => State == ElevatorState.Moving;
     public int PassengerCount { get; set; } = GetRandomPassengerCount();
     public int MaxPassengers { get; } = ElevatorConstants.MaxPassengers;
+
+    public Elevator()
+    {
+        ElevatorId = _nextId++;
+    }
 
     private static ElevatorDirection GetRandomDirection()
     {

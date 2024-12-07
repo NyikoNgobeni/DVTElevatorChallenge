@@ -7,23 +7,19 @@ namespace DVTElevatorChallengeTest.Application.Services
     /// <summary>
     /// Service to manage elevator operations within a building.
     /// </summary>
-    public class ElevatorService : IElevatorService
+    /// <remarks>
+    /// Initializes a new instance of the ElevatorService class.
+    /// </remarks>
+    /// <param name="dispatcher">The dispatcher responsible for managing elevator requests.</param>
+    /// <param name="logger">The logger instance for logging information.</param>
+    /// <param name="elevatorRepository">The repository for managing elevator data.</param>
+    public class ElevatorService(Logger<ElevatorService> logger, IElevatorRepository elevatorRepository) : IElevatorService
     {
-        private readonly ILogger<ElevatorService> _logger;
-        private readonly IElevatorRepository _elevatorRepository;
-
-        /// <summary>
-        /// Initializes a new instance of the ElevatorService class.
-        /// </summary>
-        /// <param name="dispatcher">The dispatcher responsible for managing elevator requests.</param>
-        /// <param name="logger">The logger instance for logging information.</param>
-        /// <param name="elevatorRepository">The repository for managing elevator data.</param>
-        public ElevatorService(Logger<ElevatorService> logger, IElevatorRepository elevatorRepository)
-        {
-            _logger = logger;
-            _elevatorRepository = elevatorRepository;
-        }
-
+        private readonly ILogger<ElevatorService> _logger = logger;
+        private readonly IElevatorRepository _elevatorRepository = elevatorRepository;
+        private const int DefaultElevatorCount = 5;
+        private const int FloorTravelTimeInMilliseconds = 1000;
+        private const int ArrivalMessageDelayInMilliseconds = 2000;
 
         /// <summary>
         /// Moves the elevator to the user's floor and then to the destination floor.
@@ -34,13 +30,18 @@ namespace DVTElevatorChallengeTest.Application.Services
         {
             try
             {
+                var elivator = await _elevatorRepository.GetElevatorsAsync(DefaultElevatorCount);
+                var currentFloor = await _elevatorRepository.GetCurrentFloorAsync(elivator.FirstOrDefault().ElevatorId);
+                var floorsToTravel = Math.Abs(destinationFloor - currentFloor);
+                var travelTime = floorsToTravel * FloorTravelTimeInMilliseconds;
+
                 await _elevatorRepository.MoveElevatorToUserDestinationAsync(destinationFloor);
 
                 _logger.LogInformation("Elevator is moving to floor {DestinationFloor} with {Passengers} passengers.", destinationFloor, passengers);
-
+                await Task.Delay(travelTime);
                 DisplayArrivalMessage(destinationFloor);
 
-                await Task.Delay(2000);
+                await Task.Delay(ArrivalMessageDelayInMilliseconds);
             }
             catch (Exception ex)
             {
@@ -64,10 +65,10 @@ namespace DVTElevatorChallengeTest.Application.Services
         {
             try
             {
-                var elevators = await _elevatorRepository.GetElevatorsAsync(5);
+                var elevators = await _elevatorRepository.GetElevatorsAsync(DefaultElevatorCount);
                 foreach (var elevator in elevators)
                 {
-                    _logger.LogInformation($"Elevator {elevator.Id}: Floor {elevator.CurrentFloor}, " +
+                    _logger.LogInformation($"Elevator {elevator.ElevatorId}: Floor {elevator.CurrentFloor}, " +
                                            $"Direction: {elevator.Direction}, " +
                                            $"Passengers: {elevator.PassengerCount}");
                 }

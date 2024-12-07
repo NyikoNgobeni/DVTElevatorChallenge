@@ -8,5 +8,6 @@ namespace DVTElevatorChallengeTest.Application.Interfaces
         Task MoveToFloorAsync(int floor);
         Task<bool> AddPassengersAsync(int passengers);
         Task MoveElevatorToUserDestinationAsync(int destinationFloor);
+        Task<int> GetCurrentFloorAsync(int elevatorId);
     }
 }

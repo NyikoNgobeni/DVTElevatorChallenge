@@ -12,7 +12,7 @@ namespace DVTElevatorChallengeTest.Infrastructure.Repositories
         {
             var random = new Random();
             var elevators = Enumerable.Range(1, elevatorCount)
-                                      .Select(id => new Elevator(id) { CurrentFloor = random.Next(1, 11) })
+                                      .Select(_ => new Elevator { CurrentFloor = random.Next(1, 11) })
                                       .ToList();
             return Task.FromResult(elevators);
         }
@@ -60,6 +60,11 @@ namespace DVTElevatorChallengeTest.Infrastructure.Repositories
 
             // Move elevator to destination floor
             await MoveToFloorAsync(destinationFloor);
+        }
+
+        public Task<int> GetCurrentFloorAsync(int elevatorId)
+        {
+            return Task.FromResult(_elevators.CurrentFloor);
         }
     }
 }
